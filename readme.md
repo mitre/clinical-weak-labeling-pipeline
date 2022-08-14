@@ -1,7 +1,7 @@
-################################################################
-A weak labeling NLP pipeline for metadata extraction from clinical reports 
 
-POCs: Chad Hunter, Emily Workman
+# A weak labeling NLP pipeline for metadata extraction from clinical reports 
+
+## POCs: Chad Hunter, Emily Workman
 Authors: Emily Workman, Chad Hunter, Daniel Berman, Jason Yao, Steven Guan, Laura Strickhart, Rob Beanlands, Thiery Mesana, Sybil Russell, Robert DeKemp, David Slater
 
 Date: 2022/08/11
