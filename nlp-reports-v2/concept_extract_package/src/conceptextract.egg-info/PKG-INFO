@@ -1,0 +1,30 @@
+Metadata-Version: 2.1
+Name: conceptextract
+Version: 0.0.1
+Summary: A Syntactic Dependency Parser & Concept Extraction Method
+Author: Chad Hunter and Emily Workman
+Author-email: eworkman@mitre.org
+License: MIT License
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# NLP with weak label pipeline
+
+# How to use
+
+Step #1:
+set filepaths in "VIP_FilePaths.csv" to the correct paths for your system
+
+Step #2:
+run "concept_extraction_input_arguments.py"
+
+Step #3:
+run "concept_extraction_nlp_pipe.py"
+
+Step #4:
+run "concept_extraction_SnorkelPipe.py"
+

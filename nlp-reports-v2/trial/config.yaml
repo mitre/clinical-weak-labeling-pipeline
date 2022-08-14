@@ -1,0 +1,348 @@
+FILE_PATHS:
+  input_directory: trial/inputs
+  output_directory: trial/outputs
+  code_path_library: null
+  data_directory: trial/data
+DATA:
+  data_csv: ClinicalTextParseLV_EX_demo2.csv
+  index_column: Study_No
+  data_columns_with_keywd_filter:
+  - - Bullet3
+    - ischemi(a|c)|scar|lcx_disease|transmural|nontransmural|infarction|infarct
+  - - Bullet1
+    - ''
+NLP_CFG:
+  Language_model: en_core_sci_scibert
+  Pseudo_negations:
+  - with no improvement at rest
+  - with no improvement on rest
+  - not improve at rest
+  - with no reversibility at rest
+  - with no improvement on the rest study
+  - with no significant improvement on rest imaging
+  - with no reversibility on rest
+  Preceding_negations:
+  - rather than
+  Entity_Patterns:
+  - label: GPE
+    pattern: ischemic
+  - label: GPE
+    pattern: ischemia
+  - label: GPE
+    pattern: rca
+  - label: GPE
+    pattern: lad
+  - label: GPE
+    pattern: lcx
+  - label: GPE
+    pattern: rca/lcx
+  - label: GPE
+    pattern: lcx/rca
+  - label: GPE
+    pattern: lcx_disease
+  - label: GPE
+    pattern: lcx/diagonal
+  - label: GPE
+    pattern: circumflex
+  - label: GPE
+    pattern:
+    - lower: lcx
+    - lower: disease
+  - label: GPE
+    pattern:
+    - lower: rca
+    - lower: territory
+  - label: GPE
+    pattern:
+    - lower: rca
+    - lower: territories
+  - label: GPE
+    pattern:
+    - lower: lad
+    - lower: territory
+  - label: GPE
+    pattern:
+    - lower: lad
+    - lower: territories
+  - label: GPE
+    pattern:
+    - lower: lcx
+    - lower: territory
+  - label: GPE
+    pattern:
+    - lower: lcx
+    - lower: territories
+  - label: GPE
+    pattern: scar
+  - label: GPE
+    pattern:
+    - lower: transmural
+    - lower: scar
+  - label: GPE
+    pattern:
+    - lower: nontransmural
+    - lower: scar
+  - label: GPE
+    pattern: transmural
+  - label: GPE
+    pattern: nontransmural
+  - label: GPE
+    pattern: infarction
+  - label: GPE
+    pattern: infarct
+  - label: GPE
+    pattern: transmural/nontransmural
+  - label: GPE
+    pattern:
+    - lower: perfusion
+    - lower: defect
+  Retokenization_list:
+  - - perfusion
+    - defect
+  - - transmural
+    - scar
+  - - nontransmural
+    - scar
+  - - perfusion
+    - defect
+  - - rca
+    - territory
+  - - rca
+    - territories
+  - - lcx
+    - territory
+  - - lcx
+    - disease
+  - - lcx
+    - territories
+  - - lad
+    - territory
+  - - lad
+    - territories
+  - - consistent
+    - with
+  - - rca
+    - territory
+  - - small
+    - sized
+RuleSets:
+  IschemiaVessel:
+    Concepts:
+      concept1:
+      - - ischemia
+        - ischemic
+      concept2:
+      - - rca
+        - rca territory
+        - rca territories
+        - rca/lcx
+        - lcx/rca
+      - - lad
+        - lad territory
+        - lad territories
+      - - lcx
+        - lcx territory
+        - lcx territories
+        - lcx_disease
+        - rca/lcx
+        - lcx/rca
+        - lcx/diagonal
+        - circumflex
+      true_columns:
+      - Ischemia_RCA
+      - Ischemia_LAD
+      - Ischemia_LCX
+      rule_names:
+      - Ischemia_RCA
+      - Ischemia_LAD
+      - Ischemia_LCX
+    Rules:
+      1:
+        rule: keywd_associations
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      2:
+        rule: common_ancestor
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      3:
+        rule: keywd_find_two
+        ents: true
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      4:
+        rule: keywd_find_two
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      5:
+        rule: keywd_associations
+        ents: false
+        complement: true
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      6:
+        rule: common_ancestor
+        ents: false
+        complement: true
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      7:
+        rule: keywd_find_two
+        ents: true
+        complement: true
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      8:
+        rule: keywd_find_two
+        ents: false
+        complement: true
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+    num_concepts: 2
+    type: complement
+    out_prefix: IschemiaVessel
+    data_column: Bullet3
+  Ischemia:
+    Concepts:
+      concept1:
+      - ischemia
+      - ischemic
+      - lcx_disease
+      concept2:
+      - perfusion_defect
+      - perfusion defect
+      true_columns:
+      - Ischemia_Ischemia
+      rule_names:
+      - Ischemia_Ischemia
+    Rules:
+      1:
+        rule: keywd_find
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+      2:
+        rule: keywd_find
+        ents: false
+        complement: false
+        series: lemma_doc
+        wordlist1: concept1
+      3:
+        rule: keywd_find
+        ents: true
+        complement: false
+        series: lemma_doc
+        wordlist1: concept1
+      4:
+        rule: keywd_two_conditional
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+      5:
+        rule: keywd_find
+        ents: false
+        complement: true
+        series: nlp_doc
+        wordlist1: concept1
+      6:
+        rule: keywd_find
+        ents: false
+        complement: true
+        series: lemma_doc
+        wordlist1: concept1
+      7:
+        rule: keywd_find
+        ents: true
+        complement: true
+        series: lemma_doc
+        wordlist1: concept1
+      9:
+        rule: keywd_two_conditional
+        ents: false
+        complement: true
+        series: nlp_doc
+        wordlist1: concept1
+        wordlist2: concept2
+    num_concepts: 1
+    type: complement
+    out_prefix: Ischemia
+    data_column: Bullet3
+  Overall:
+    Concepts:
+      concept1:
+      - normal
+      concept2:
+      - abnormal
+      true_columns:
+      - Interp2
+      rule_names:
+      - Interp2
+    Rules:
+      1:
+        rule: regex_finder
+        regex_pat: ^norm|[^ab]norm
+        complement: false
+        series: text
+      2:
+        rule: keywd_find
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept1
+      3:
+        rule: keywd_find
+        ents: false
+        complement: false
+        series: lemma_doc
+        wordlist1: concept1
+      4:
+        rule: keywd_find
+        ents: true
+        complement: false
+        series: lemma_doc
+        wordlist1: concept1
+      5:
+        rule: regex_finder
+        regex_pat: ^norm|[^ab]norm
+        complement: false
+        series: text
+      6:
+        rule: keywd_find
+        ents: false
+        complement: false
+        series: nlp_doc
+        wordlist1: concept2
+      7:
+        rule: keywd_find
+        ents: false
+        complement: false
+        series: lemma_doc
+        wordlist1: concept2
+      8:
+        rule: keywd_find
+        ents: true
+        complement: false
+        series: lemma_doc
+        wordlist1: concept2
+    num_concepts: 1
+    type: opposite
+    out_prefix: Overall
+    data_column: Bullet1

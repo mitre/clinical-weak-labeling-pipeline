@@ -1,0 +1,6 @@
+"E:\PostDoc\eMAGIN AI\MS_Visual_Studio_2020\NLP\NLP_Package\NLP_Package\NLP_Main\"
+
+from powershell:
+py -m pip install --upgrade build
+
+py -m build
